@@ -111,7 +111,6 @@ export default {
       }
     })
       .then(res => {
-        console.log(res.data);
         switch (res.data["status"]) {
           case 200:
             this.$message({
@@ -119,6 +118,7 @@ export default {
               type: "success"
             });
             this.pasteInfo = res.data;
+            this.isLoading = false;
             break;
           case 404:
             this.$message({
