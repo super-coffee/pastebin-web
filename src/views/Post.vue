@@ -26,7 +26,11 @@
         label-width="100px"
       >
         <el-form-item label="Poster" prop="poster">
-          <el-input v-model="form.poster" placeholder="your name (we will remeber this next time)" clearable></el-input>
+          <el-input
+            v-model="form.poster"
+            placeholder="your name (we will remeber this next time)"
+            clearable
+          ></el-input>
         </el-form-item>
         <el-form-item label="Language" prop="lang">
           <el-select
@@ -86,6 +90,18 @@
         </el-form-item>
       </el-form>
     </el-card>
+    <!-- Dialog -->
+    <el-dialog title="Paste Info" width="fit-content" :visible.sync="dialogVisible">
+      <span>Paste ID:&nbsp;&nbsp;&nbsp;</span>
+      <code>{{ pasteInfo._id }}</code>
+      <br />
+      <span>Link:&nbsp;&nbsp;&nbsp;</span>
+      <el-link type="primary" :href="pasteInfo.viewLink">{{ pasteInfo.viewLink }}</el-link>
+      <span slot="footer" class="dialog-footer">
+        <el-button icon="el-icon-view" @click="viewPaste">View</el-button>
+        <el-button type="primary" icon="el-icon-copy-document" @click="copyId">Copy Link</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -100,7 +116,9 @@ export default {
         lang: "*",
         code: ""
       },
+      pasteInfo: {},
       isSubmitting: false,
+      dialogVisible: false,
       searchId: "",
       languages: [
         { name: "Plain Text", lang: "*" },
@@ -136,6 +154,29 @@ export default {
     }
   },
   methods: {
+    copyId: function() {
+      this.$copyText(this.pasteInfo.viewLink).then(
+        () => {
+          this.dialogVisible = false;
+          this.$message({
+            message: "Copied",
+            type: "success"
+          });
+        },
+        () => {
+          this.$message({
+            message: "Can not copy",
+            type: "error"
+          });
+        }
+      );
+    },
+    viewPaste: function() {
+      this.$router.push({
+        name: "Viewer",
+        params: { pasteId: this.pasteInfo._id }
+      });
+    },
     onSubmit: function() {
       this.isSubmitting = true;
       if (this.isFromCompleted) {
@@ -151,10 +192,9 @@ export default {
                   message: "Submitted successfully",
                   type: "success"
                 });
-                this.$router.push({
-                  name: "Viewer",
-                  params: { pasteId: res.data["datas"]["_id"] }
-                });
+                this.pasteInfo = res.data["datas"];
+                this.pasteInfo.viewLink = `${location.origin}${location.pathname}#${this.pasteInfo._id}`;
+                this.dialogVisible = true;
                 break;
               case 500:
                 this.$message({
@@ -170,7 +210,7 @@ export default {
               type: "error"
             });
           });
-          localStorage.setItem("poster", this.form.poster);
+        localStorage.setItem("poster", this.form.poster);
       } else {
         this.$message({
           message: "Incomplete form!",
@@ -192,6 +232,9 @@ export default {
 code {
   font-family: "Fira Code", monospace;
   font-size: 10px;
+  color: #476582;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(27, 31, 35, 0.05);
 }
 .el-tooltip.item {
   margin-bottom: 0px;
