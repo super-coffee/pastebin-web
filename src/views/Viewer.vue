@@ -117,7 +117,7 @@ export default {
               message: "Loaded Paste",
               type: "success"
             });
-            this.pasteInfo = res.data;
+            this.pasteInfo = res.data["datas"];
             this.isLoading = false;
             break;
           case 404:
