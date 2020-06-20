@@ -16,7 +16,7 @@
             <i class="el-icon-edit"></i>
           </el-button>
         </el-tooltip>
-                <el-tooltip
+        <el-tooltip
           class="item"
           effect="dark"
           content="Copy Short Link"
@@ -122,12 +122,14 @@ export default {
             break;
           case 404:
             this.$message({
+              duration: 0,
               message: "Paste not found",
               type: "error"
             });
             break;
           case 500:
             this.$message({
+              duration: 0,
               message: "Server Error!",
               type: "error"
             });
@@ -136,6 +138,7 @@ export default {
       })
       .catch(err => {
         this.$message({
+          duration: 0,
           message: err,
           type: "error"
         });
