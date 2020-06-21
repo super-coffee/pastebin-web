@@ -49,7 +49,7 @@
     </el-card>
     <el-card class="box-card" v-if="pasteInfo.code">
       <div slot="header" class="clearfix">
-        <span>{{ pasteInfo.filename || 'Code Preview' }}</span>
+        <span>{{ pasteInfo.filename || 'Code' }}</span>
         <el-tooltip
           class="item"
           effect="dark"
