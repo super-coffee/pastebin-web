@@ -99,7 +99,7 @@
       <el-link type="primary" :href="pasteInfo.viewLink">{{ pasteInfo.viewLink }}</el-link>
       <span slot="footer" class="dialog-footer">
         <el-button icon="el-icon-view" @click="viewPaste">View</el-button>
-        <el-button type="primary" icon="el-icon-copy-document" @click="copyId">Copy Link</el-button>
+        <el-button type="primary" icon="el-icon-copy-document" @click="copyLink">Copy Link</el-button>
       </span>
     </el-dialog>
   </div>
@@ -154,7 +154,7 @@ export default {
     }
   },
   methods: {
-    copyId: function() {
+    copyLink: function() {
       this.$copyText(this.pasteInfo.viewLink).then(
         () => {
           this.dialogVisible = false;
