@@ -4,30 +4,17 @@
     <el-card class="box-card" shadow="hover" v-loading="isLoading">
       <div slot="header" class="clearfix">
         <span>Paste - {{ this.$route.params['pasteId'] }}</span>
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="Click and go to the create page"
-          placement="left"
-          style="float: right; padding: 0px 0"
-        >
-          <el-button type="text" @click="goCreate()">
+        <div style="float: right">
+          <el-button type="text" @click="copyLink()" style="padding: 0px 0">
+            copy link
+            <i class="el-icon-copy-document"></i>
+          </el-button>
+          <el-divider direction="vertical" style="padding: 0px 0"></el-divider>
+          <el-button type="text" @click="goCreate()" style="padding: 0px 0">
             or create one
             <i class="el-icon-edit"></i>
           </el-button>
-        </el-tooltip>
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="Copy Short Link"
-          placement="left"
-          style="float: right; padding: 0px 0"
-        >
-          <el-button type="text" @click="goCreate()">
-            Copy Short Link
-            <i class="el-icon-edit"></i>
-          </el-button>
-        </el-tooltip>
+        </div>
       </div>
       <el-form ref="form" :model="pasteInfo" @submit.native.prevent label-width="120px">
         <el-form-item label="Poster">
@@ -50,6 +37,7 @@
     <el-card class="box-card" v-if="pasteInfo.code">
       <div slot="header" class="clearfix">
         <span>{{ pasteInfo.filename || 'Code' }}</span>
+        <!-- TODO add copy-icon here -->
         <el-tooltip
           class="item"
           effect="dark"
@@ -57,7 +45,7 @@
           placement="left"
           style="float: right; padding: 0px 0"
         >
-          <el-button type="text" @click="doCopy()">
+          <el-button type="text" @click="copyCode()">
             Copy
             <i class="el-icon-copy-document"></i>
           </el-button>
@@ -85,7 +73,24 @@ export default {
     goCreate: function() {
       this.$router.push({ name: "Post" });
     },
-    doCopy: function() {
+    copyLink: function() {
+      this.$copyText(this.pasteInfo.viewLink).then(
+        () => {
+          this.dialogVisible = false;
+          this.$message({
+            message: "Copied",
+            type: "success"
+          });
+        },
+        () => {
+          this.$message({
+            message: "Can not copy",
+            type: "error"
+          });
+        }
+      );
+    },
+    copyCode: function() {
       this.$copyText(this.pasteInfo.code).then(
         () => {
           this.$message({
@@ -118,6 +123,7 @@ export default {
               type: "success"
             });
             this.pasteInfo = res.data["datas"];
+            this.pasteInfo.viewLink = `${location.origin}${location.pathname}#${this.pasteInfo._id}`;
             this.isLoading = false;
             break;
           case 404:
