@@ -1,3 +1,4 @@
 module.exports = {
-    appName: 'Coffee Pastebin'
+    appName: 'Coffee Pastebin',
+    backgroundColor: '#B3D8FF'
 }

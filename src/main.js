@@ -11,8 +11,14 @@ Vue.use(vueHljs)
 Vue.use(VueClipboard)
 Vue.config.productionTip = false
 
+// pastebin
 import pastebinConfig from './pastebin.config'
-Vue.prototype.$pastebinConfig = pastebinConfig
+Vue.prototype.$pastebin = {
+  config: pastebinConfig,
+  setTitle: function (title) {
+    document.title = `${title} | ${pastebinConfig.appName}`;
+  }
+}
 
 new Vue({
   router,

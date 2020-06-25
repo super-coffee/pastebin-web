@@ -223,6 +223,9 @@ export default {
     goSearch: function() {
       this.$router.push({ name: "Search" });
     }
+  },
+  mounted: function() {
+    this.$pastebin.setTitle("Post");
   }
 };
 </script>

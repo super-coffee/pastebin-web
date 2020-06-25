@@ -5,9 +5,9 @@
       <div slot="header" class="clearfix">
         <span>Paste - {{ this.$route.params['pasteId'] }}</span>
         <div style="float: right">
-          <el-button type="text" @click="copyLink()" style="padding: 0px 0">
+          <el-button type="text" @click="doCopyText(pasteInfo.viewLink)" style="padding: 0px 0">
             copy link
-            <i class="el-icon-copy-document"></i>
+            <i class="el-icon-share"></i>
           </el-button>
           <el-divider direction="vertical" style="padding: 0px 0"></el-divider>
           <el-button type="text" @click="goCreate()" style="padding: 0px 0">
@@ -37,17 +37,24 @@
     <el-card class="box-card" v-if="pasteInfo.code">
       <div slot="header" class="clearfix">
         <span>{{ pasteInfo.filename || 'Code' }}</span>
-        <!-- TODO add copy-icon here -->
+        <el-button
+          type="text"
+          v-if="pasteInfo.filename"
+          @click="doCopyText(pasteInfo.filename)"
+          style="margin: 0px 6px; padding: 0px 0px;"
+        >
+          <i class="el-icon-copy-document"></i>
+        </el-button>
         <el-tooltip
           class="item"
           effect="dark"
-          content="Click & Copy"
+          content="Copy the follow content"
           placement="left"
           style="float: right; padding: 0px 0"
         >
-          <el-button type="text" @click="copyCode()">
-            Copy
-            <i class="el-icon-copy-document"></i>
+          <el-button type="text" @click="doCopyText(pasteInfo.code)">
+            copy code
+            <i class="el-icon-document-copy"></i>
           </el-button>
         </el-tooltip>
       </div>
@@ -73,25 +80,8 @@ export default {
     goCreate: function() {
       this.$router.push({ name: "Post" });
     },
-    copyLink: function() {
-      this.$copyText(this.pasteInfo.viewLink).then(
-        () => {
-          this.dialogVisible = false;
-          this.$message({
-            message: "Copied",
-            type: "success"
-          });
-        },
-        () => {
-          this.$message({
-            message: "Can not copy",
-            type: "error"
-          });
-        }
-      );
-    },
-    copyCode: function() {
-      this.$copyText(this.pasteInfo.code).then(
+    doCopyText: function(text) {
+      this.$copyText(text).then(
         () => {
           this.$message({
             message: "Copied",
@@ -108,11 +98,13 @@ export default {
     }
   },
   mounted() {
+    let pasteId = this.$route.params["pasteId"];
+    this.$pastebin.setTitle(pasteId);
     this.$axios({
       method: "get",
       url: "/api/paste",
       params: {
-        pasteId: this.$route.params["pasteId"]
+        pasteId: pasteId
       }
     })
       .then(res => {

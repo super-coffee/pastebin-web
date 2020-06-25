@@ -62,6 +62,9 @@ export default {
     goCreate: function() {
       this.$router.push({ name: "Post" });
     }
+  },
+  mounted: function() {
+    this.$pastebin.setTitle("Search");
   }
 };
 </script>
