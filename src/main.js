@@ -11,6 +11,9 @@ Vue.use(vueHljs)
 Vue.use(VueClipboard)
 Vue.config.productionTip = false
 
+import pastebinConfig from './pastebin.config'
+Vue.prototype.$pastebinConfig = pastebinConfig
+
 new Vue({
   router,
   render: h => h(App)
