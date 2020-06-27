@@ -95,6 +95,7 @@
       <span>Paste ID:&nbsp;&nbsp;&nbsp;</span>
       <code>{{ pasteInfo._id }}</code>
       <br />
+      <br />
       <span>Link:&nbsp;&nbsp;&nbsp;</span>
       <el-link type="primary" :href="pasteInfo.viewLink">{{ pasteInfo.viewLink }}</el-link>
       <span slot="footer" class="dialog-footer">
